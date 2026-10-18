@@ -1,0 +1,36 @@
+#define LED_PIN 4
+#define BUTTON_PIN 2
+
+int lastButtonState = HIGH;
+
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  Serial.println("เริ่มทำงาน พร้อมเช็คปุ่มและ LED");
+}
+
+void loop() {
+  int buttonState = digitalRead(BUTTON_PIN);
+  int ledState = digitalRead(LED_PIN);
+
+  if (buttonState != lastButtonState) {
+    Serial.print("ปุ่มเปลี่ยนสถานะ: ");
+    Serial.println(buttonState == LOW ? "กดอยู่ (LOW)" : "ปล่อยแล้ว (HIGH)");
+
+    if (buttonState == LOW) {
+      Serial.println("-> สั่งเปิด LED");
+      digitalWrite(LED_PIN, HIGH);
+      delay(2000);
+      digitalWrite(LED_PIN, LOW);
+      Serial.println("-> ปิด LED แล้ว (หลังดีเลย์ 2 วิ)");
+    } else {
+      digitalWrite(LED_PIN, LOW);
+      Serial.println("-> สั่งปิด LED (ปุ่มถูกปล่อย)");
+    }
+
+    lastButtonState = buttonState; // อันนี้เพิ่มให้ด้วย เดี๋ยวอธิบายข้างล่าง
+  }
+}
