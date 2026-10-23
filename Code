@@ -3,6 +3,7 @@
 #define button 4
 
 int lastStateButton = HIGH;
+int ledState = LOW;
 
 void setup() {
   Serial.begin(115200);
@@ -10,24 +11,24 @@ void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(button, INPUT_PULLUP);
 
-  digitalWrite(ledPin, LOW);
+  digitalWrite(ledPin, ledState);
 }
 
 void loop() {
   int buttonState = digitalRead(button);
 
   if (buttonState != lastStateButton) {
-    delay(30); // ลดปัญหาจากหน้าสัมผัสปุ่มเด้ง
+    delay(30);  // ลดปัญหาปุ่มเด้ง
     buttonState = digitalRead(button);
 
     if (buttonState != lastStateButton) {
-      Serial.print("ปุ่มเปลี่ยนสถานะ: ");
-      Serial.println(buttonState == LOW ? "กดอยู่ (LOW)" : "ปล่อยแล้ว (HIGH)");
 
+      // ทำงานเฉพาะตอนกดปุ่ม
       if (buttonState == LOW) {
-        digitalWrite(ledPin, HIGH);
-        delay(2000);
-        digitalWrite(ledPin, LOW);
+        ledState = !ledState;
+        digitalWrite(ledPin, ledState);
+
+        Serial.println(ledState == HIGH? "LED ON" : "LED OFF");
       }
 
       lastStateButton = buttonState;
